@@ -23,7 +23,24 @@ type ExampleReply struct {
 }
 
 // Add your RPC definitions here.
+type AskTaskArgs struct {
+}
 
+type AskTaskReply struct {
+	TaskType int // 0: map, 1: reduce, 2: done
+	TaskId   int
+	TaskFile []string
+	NReduce  int
+}
+
+type FinishTaskArgs struct {
+	TaskId        int
+	TaskType      int
+	Intermediates map[int]string
+}
+
+type FinishTaskReply struct {
+}
 
 // Cook up a unique-ish UNIX-domain socket name
 // in /var/tmp, for the coordinator.
