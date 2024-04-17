@@ -25,3 +25,10 @@ type GetArgs struct {
 type GetReply struct {
 	Value string
 }
+
+type CompleteArgs struct {
+	Key int64
+}
+
+type CompleteReply struct {
+}

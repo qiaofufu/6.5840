@@ -10,8 +10,9 @@ import "math/big"
 type Clerk struct {
 	server *labrpc.ClientEnd
 	// You will have to modify this struct.
-	id  int64
-	seq atomic.Int64
+	id   int64
+	seq  atomic.Int64
+	prev int64
 }
 
 func nrand() int64 {
@@ -49,7 +50,12 @@ func (ck *Clerk) Get(key string) string {
 		ClientID: ck.id,
 		Sequence: seq,
 	}, &resp) {
+	}
 
+	resp2 := CompleteReply{}
+	for !ck.server.Call("KVServer.Complete", &CompleteArgs{
+		Key: ck.id + seq,
+	}, &resp2) {
 	}
 
 	return resp.Value
@@ -73,9 +79,13 @@ func (ck *Clerk) PutAppend(key string, value string, op string) string {
 		ClientID: ck.id,
 		Sequence: seq,
 	}, &resp) {
-
 	}
 
+	resp2 := CompleteReply{}
+	for !ck.server.Call("KVServer.Complete", &CompleteArgs{
+		Key: ck.id + seq,
+	}, &resp2) {
+	}
 	return resp.Value
 }
 
